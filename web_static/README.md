@@ -5,7 +5,7 @@
 > folder holds icons for the site (e.g. logo, bathroom icons, bedroom icons,
 > guest icons). The Styles folder holds CSS styling files. The largest numbered
 > style file of each category (e.g. common, footer, header, places) is most
-> relevant to the finished product. The highlest numbered index.html file is
+> relevant to the finished product.The highlest numbered index.html file is
 > likewise the most relevant to the finished product.
 
 ![M](https://i.imgur.com/ujItUkN.png)
