@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+=======
+#!/usr/bin/python3
+
+"""Module for the entry point of the command interpreter."""
+
+>>>>>>> c4a3e087c224d3ffc0f33a8129df18546be2422b
 import cmd
 from models.base_model import BaseModel
 from models import storage
