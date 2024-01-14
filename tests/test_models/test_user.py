@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """Defines unittests for models/user.py.
-
 Unittest classes:
     TestUser_instantiation
     TestUser_save
@@ -9,9 +8,9 @@ Unittest classes:
 import os
 import models
 import unittest
+from models.user import User
 from datetime import datetime
 from time import sleep
-from models.user import User
 
 
 class TestUser_instantiation(unittest.TestCase):
@@ -49,17 +48,17 @@ class TestUser_instantiation(unittest.TestCase):
         us2 = User()
         self.assertNotEqual(us1.id, us2.id)
 
-    def test_two_users_different_created_at(self):
-        us1 = User()
-        sleep(0.05)
-        us2 = User()
-        self.assertLess(us1.created_at, us2.created_at)
-
     def test_two_users_different_updated_at(self):
         us1 = User()
         sleep(0.05)
         us2 = User()
         self.assertLess(us1.updated_at, us2.updated_at)
+
+    def test_two_users_different_created_at(self):
+        us1 = User()
+        sleep(0.05)
+        us2 = User()
+        self.assertLess(us1.created_at, us2.created_at)
 
     def test_str_representation(self):
         dt = datetime.today()
@@ -70,8 +69,8 @@ class TestUser_instantiation(unittest.TestCase):
         usstr = us.__str__()
         self.assertIn("[User] (123456)", usstr)
         self.assertIn("'id': '123456'", usstr)
-        self.assertIn("'created_at': " + dt_repr, usstr)
         self.assertIn("'updated_at': " + dt_repr, usstr)
+        self.assertIn("'created_at': " + dt_repr, usstr)
 
     def test_args_unused(self):
         us = User(None)
@@ -91,24 +90,18 @@ class TestUser_instantiation(unittest.TestCase):
 
 
 class TestUser_save(unittest.TestCase):
-    """Unittests for testing save method of the  class."""
+    """Unittests for testing save method of the class."""
 
     @classmethod
-    def setUp(self):
-        try:
+    def setUpClass(cls):
+        if os.path.exists("file.json"):
             os.rename("file.json", "tmp")
-        except IOError:
-            pass
 
     def tearDown(self):
-        try:
+        if os.path.exists("file.json"):
             os.remove("file.json")
-        except IOError:
-            pass
-        try:
+        if os.path.exists("tmp"):
             os.rename("tmp", "file.json")
-        except IOError:
-            pass
 
     def test_one_save(self):
         us = User()
@@ -134,15 +127,15 @@ class TestUser_save(unittest.TestCase):
             us.save(None)
 
     def test_save_updates_file(self):
-        us = User()
         us.save()
         usid = "User." + us.id
         with open("file.json", "r") as f:
-            self.assertIn(usid, f.read())
+            data = json.load(f)
+            self.assertIn(usid, data)
 
 
 class TestUser_to_dict(unittest.TestCase):
-    """Unittests for testing to_dict method of the User class."""
+    """Unittests for testing to_dict method of User class."""
 
     def test_to_dict_type(self):
         self.assertTrue(dict, type(User().to_dict()))
@@ -150,8 +143,8 @@ class TestUser_to_dict(unittest.TestCase):
     def test_to_dict_contains_correct_keys(self):
         us = User()
         self.assertIn("id", us.to_dict())
-        self.assertIn("created_at", us.to_dict())
         self.assertIn("updated_at", us.to_dict())
+        self.assertIn("created_at", us.to_dict())
         self.assertIn("__class__", us.to_dict())
 
     def test_to_dict_contains_added_attributes(self):
@@ -176,8 +169,8 @@ class TestUser_to_dict(unittest.TestCase):
         tdict = {
             'id': '123456',
             '__class__': 'User',
-            'created_at': dt.isoformat(),
             'updated_at': dt.isoformat(),
+            'created_at': dt.isoformat(),
         }
         self.assertDictEqual(us.to_dict(), tdict)
 

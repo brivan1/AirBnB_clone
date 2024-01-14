@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """Defines unittests for models/state.py.
-
 Unittest classes:
     TestState_instantiation
     TestState_save
@@ -9,8 +8,8 @@ Unittest classes:
 import os
 import models
 import unittest
-from datetime import datetime
 from time import sleep
+from datetime import datetime
 from models.state import State
 
 
@@ -160,7 +159,7 @@ class TestState_to_dict(unittest.TestCase):
         st_dict = st.to_dict()
         self.assertEqual(str, type(st_dict["id"]))
         self.assertEqual(str, type(st_dict["created_at"]))
-        self.assertEqual(str, type(st_dict["updated_at"]))
+        self.assertEqual(str, type(st_dict["updeated_at"]))
 
     def test_to_dict_output(self):
         dt = datetime.today()
@@ -170,8 +169,8 @@ class TestState_to_dict(unittest.TestCase):
         tdict = {
             'id': '123456',
             '__class__': 'State',
-            'created_at': dt.isoformat(),
             'updated_at': dt.isoformat(),
+            'created_at': dt.isoformat(),
         }
         self.assertDictEqual(st.to_dict(), tdict)
 
