@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """Defines unittests for models/review.py.
-
 Unittest classes:
     TestReview_instantiation
     TestReview_save
@@ -9,9 +8,9 @@ Unittest classes:
 import os
 import models
 import unittest
+from models.review import Review
 from datetime import datetime
 from time import sleep
-from models.review import Review
 
 
 class TestReview_instantiation(unittest.TestCase):
@@ -76,8 +75,8 @@ class TestReview_instantiation(unittest.TestCase):
         rvstr = rv.__str__()
         self.assertIn("[Review] (123456)", rvstr)
         self.assertIn("'id': '123456'", rvstr)
-        self.assertIn("'created_at': " + dt_repr, rvstr)
         self.assertIn("'updated_at': " + dt_repr, rvstr)
+        self.assertIn("'created_at': " + dt_repr, rvstr)
 
     def test_args_unused(self):
         rv = Review(None)
@@ -156,8 +155,8 @@ class TestReview_to_dict(unittest.TestCase):
     def test_to_dict_contains_correct_keys(self):
         rv = Review()
         self.assertIn("id", rv.to_dict())
-        self.assertIn("created_at", rv.to_dict())
         self.assertIn("updated_at", rv.to_dict())
+        self.assertIn("created_at", rv.to_dict())
         self.assertIn("__class__", rv.to_dict())
 
     def test_to_dict_contains_added_attributes(self):
@@ -171,8 +170,8 @@ class TestReview_to_dict(unittest.TestCase):
         rv = Review()
         rv_dict = rv.to_dict()
         self.assertEqual(str, type(rv_dict["id"]))
-        self.assertEqual(str, type(rv_dict["created_at"]))
         self.assertEqual(str, type(rv_dict["updated_at"]))
+        self.assertEqual(str, type(rv_dict["created_at"]))
 
     def test_to_dict_output(self):
         dt = datetime.today()
@@ -182,8 +181,8 @@ class TestReview_to_dict(unittest.TestCase):
         tdict = {
             'id': '123456',
             '__class__': 'Review',
-            'created_at': dt.isoformat(),
             'updated_at': dt.isoformat(),
+            'created_at': dt.isoformat(),
         }
         self.assertDictEqual(rv.to_dict(), tdict)
 
