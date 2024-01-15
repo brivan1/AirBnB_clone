@@ -1,64 +1,79 @@
 #!/usr/bin/python3
+"""This module is the file storage class"""
 import json
 import os
+import datetime
 
 
-class FileStorage:
+class FileStorage():
+    """Class for storing and retrieving data"""
     __file_path = "file.json"
-    __object = {}
+    __objects = {}
+
+    # def __init__(self):
+    #     pass
 
     def all(self):
-
-        return FileStorage.__object
+        '''returns the dictionary __objects'''
+        return self.__objects
 
     def new(self, obj):
-
-        """method related to managing a storage mechanism
-           key: created the key of the instance
-        """
-        key = f"{type(obj).__name__} {obj.id}"
-        """using the key in __object and setting the value to obj"""
-        FileStorage.__object[key] = obj
+        '''sets in __objects the obj with key <obj class name>.id'''
+        objname = obj.__class__.__name__
+        objID = obj.id
+        key = f"{objname}.{objID}"  # <class name>.id = obj
+        self.__objects[key] = obj
 
     def save(self):
+        ''' serializes __objects to the JSON file (path: __file_path)'''
+        # serialize the object by first converting it to a dictionary
+        object_dict = {}
 
-        """ serializes __objects to the JSON file """
-        with open(FileStorage.__file_path, "w", encoding="utf-8") as f:
-            d = {k: v.to_dict() for k, v in FileStorage.__object.items()}
-            json.dump(d, f)
+        for key in self.__objects.keys():
+            if type(self.__objects[key]) != dict:
+                object_dict[key] = self.__objects[key].to_dict()
+        # convert the dictionary object to json and write to the file
+        file_name = self.__file_path
+        with open(file_name, "w", encoding="utf-8") as jsonfile:
+            # json.dump(object_dict, jsonfile)
+            jsonfile.write(json.dumps(object_dict))
 
-    def clses(self):
-        """Returns a dict of valid classes and reference"""
+    def classes(self):
+        """Returns a dictionary of valid classes and their references."""
         from models.base_model import BaseModel
-        from models.state import State
         from models.user import User
-        from models.place import Place
-        from models.amenity import Amenity
+        from models.state import State
         from models.city import City
+        from models.amenity import Amenity
+        from models.place import Place
         from models.review import Review
 
-        clses = {"BaseModel": BaseModel,
-                 "User": User,
-                 "State": State,
-                 "City": City,
-                 "Amenity": Amenity,
-                 "Place": Place,
-                 "Review": Review}
-        return clses
+        classes = {"BaseModel": BaseModel,
+                   "User": User,
+                   "State": State,
+                   "City": City,
+                   "Amenity": Amenity,
+                   "Place": Place,
+                   "Review": Review
+                   }
+        return classes
 
     def reload(self):
+        """Reloads the stored objects"""
+        if os.path.exists(FileStorage.__file_path):
+            #  load the file and dump content as dictionary
+            with open(FileStorage.__file_path, "r", encoding="utf-8") \
+                    as my_file:
+                object_dict = json.loads(my_file.read())
+            final_dict = {}
 
-        """deserializes the JSON file to __objects only if it's a JSON file
-           otherwise do nothing,no execption to be raised"""
-        if not os.path.isfile(FileStorage.__file_path):
-            return
-        with open(FileStorage.__file_path, "r", encoding="utf-8") as f:
-            obj_d = json.load(f)
-            obj_d = {k: self.clses()[v["__class__"]](**v)
-                     for k, v in obj_d.items()}
+            for id, dictionary in object_dict.items():
+                class_name = dictionary['__class__']
+                final_dict[id] = self.classes()[class_name](**dictionary)
+            FileStorage.__objects = final_dict
 
     def attributes(self):
-        """Returns attributes and types for className"""
+        """Returns the valid attributes and their types for classname."""
         attributes = {
             "BaseModel":
                      {"id": str,
@@ -93,3 +108,4 @@ class FileStorage:
                          "user_id": str,
                          "text": str}
         }
+        return attributes
