@@ -2,7 +2,7 @@
 """This script is the base model"""
 import uuid
 import datetime
-from engine.file_storage import FileStorage
+from models import storage
 
 
 class BaseModel():
