@@ -4,7 +4,7 @@ import models
 import unittest
 from time import sleep
 from datetime import datetime
-from models.amenity import Amenity
+from  models.amenity import Amenity
 
 """Defines unit tests for amenity.py
 Unit test classes:
